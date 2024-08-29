@@ -1,8 +1,8 @@
 use thrust_lsp::Backend;
-use tower_service::Service;
+use tokio::time::{sleep, Duration};
 use tower_lsp::jsonrpc::Request;
 use tower_lsp::LspService;
-use tokio::time::{sleep, Duration};
+use tower_service::Service;
 
 #[tokio::test]
 async fn test_initialize() {

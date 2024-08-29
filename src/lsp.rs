@@ -1,6 +1,6 @@
 use tower_lsp::jsonrpc::Result;
 use tower_lsp::lsp_types::*;
-use tower_lsp::{Client, LanguageServer };
+use tower_lsp::{Client, LanguageServer};
 
 #[derive(Debug)]
 pub struct Backend {
@@ -9,8 +9,11 @@ pub struct Backend {
 
 #[tower_lsp::async_trait]
 impl LanguageServer for Backend {
-    async fn initialize(&self, _: InitializeParams) -> Result<InitializeResult> {
+    async fn initialize(&self, params: InitializeParams) -> Result<InitializeResult> {
         println!("initialize request");
+
+        println!("{}", params.root_uri.into());
+        
         Ok(InitializeResult {
             capabilities: ServerCapabilities {
                 hover_provider: Some(HoverProviderCapability::Simple(true)),
@@ -37,16 +40,15 @@ impl LanguageServer for Backend {
         println!("Completion request");
         Ok(Some(CompletionResponse::Array(vec![
             CompletionItem::new_simple("Hello".to_string(), "Some detail".to_string()),
-            CompletionItem::new_simple("Bye".to_string(), "More detail".to_string())
+            CompletionItem::new_simple("Bye".to_string(), "More detail".to_string()),
         ])))
     }
 
     async fn hover(&self, _: HoverParams) -> Result<Option<Hover>> {
         println!("Hover request");
         Ok(Some(Hover {
-            contents: HoverContents::Scalar(
-                MarkedString::String("You're hovering!".to_string())
-            ),
-            range: None
-        })) }
+            contents: HoverContents::Scalar(MarkedString::String("You're hovering!".to_string())),
+            range: None,
+        }))
+    }
 }
